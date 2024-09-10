@@ -3,11 +3,9 @@ name: "build"
 on:
   push:
     branches:
-      - master
-      - feature/*
-      - hotfix/*
+      - main
     tags:
-      - nixos-wsl-starter-*
+      - '*'
   pull_request: {}
   workflow_call: {}
 

@@ -1,42 +1,17 @@
 # nixos-wsl-starter
 
-This repository is intended to be a sane, batteries-included starter template
-for running a [JeezyVim](https://github.com/LGUG2Z/JeezyVim)-powered NixOS
-development environment on WSL.
+My personal NixOS development environment on WSL, based on [LGUG2Z/nixos-wsl-starter](https://github.com/LGUG2Z/nixos-wsl-starter).
 
-If you don't want to dig into NixOS too much right now, the only file you need
-to concern yourself with is [home.nix](home.nix). This is where you can add and
-remove binaries to your global `$PATH`.
-
-Go to [https://search.nixos.org](https://search.nixos.org/packages) to find the
-correct package names, though usually they will be what you expect them to be
-in other package managers.
-
-`unstable-packages` is for packages that you want to always keep at the latest
-released versions, and `stable-packages` is for packages that you want to track
-with the current release of NixOS (currently 24.05).
+- [home.nix](home.nix): install packages. Search for packages: [https://search.nixos.org](https://search.nixos.org/packages).
 
 If you want to update the versions of the available `unstable-packages`, run
 `nix flake update` to pull the latest version of the Nixpkgs repository and
 then apply the changes.
 
-Make sure to look at all the `FIXME` notices in the various files which are
-intended to direct you to places where you may want to make configuration
-tweaks.
-
-If you found this starter template useful, please consider
-[sponsoring](https://github.com/sponsors/LGUG2Z) and [subscribing to my YouTube
-channel](https://www.youtube.com/channel/UCeai3-do-9O4MNy9_xjO6mg?sub_confirmation=1).
+`FIXME:` comments mention problems that should be fixed, while `CONFIG:` refer to configuration you might want to change.
 
 ## What Is Included
 
-This starter is a lightly-opinionated take on a productive terminal-driven
-development environment based on my own preferences. However, it is trivial to
-customize to your liking both by removing and adding tools that you prefer.
-
-- The default editor is [JeezyVim](https://github.com/LGUG2Z/JeezyVim)
-- `win32yank` is used to ensure perfect bi-directional copying and pasting to
-  and from Windows GUI applications and LunarVim running in WSL
 - The default shell is `fish`
 - Native `docker` (ie. Linux, not Windows) is enabled by default
 - The prompt is [Starship](https://starship.rs/)
@@ -54,28 +29,11 @@ customize to your liking both by removing and adding tools that you prefer.
 - `fish` config is generated in [home.nix](home.nix) and includes git aliases,
   useful WSL aliases
 
-### win32yank
-
-There have been some recent changes in WSL2 that make running `win32yank`
-within WSL2 very slow. You should install this on Windows by running `scoop
-install win32yank` or compiling it from source, and then adding it to your `$PATH`:
-
-```nix
-{
-    programs.fish = {
-      interactiveShellInit = ''
-        fish_add_path --append /mnt/c/Users/<Your Windows Username>/scoop/apps/win32yank/0.1.1
-      '';
-    };
-}
-```
-
 ## Quickstart
 
 [![Watch the walkthrough video](https://img.youtube.com/vi/ZuVQds2hncs/hqdefault.jpg)](https://www.youtube.com/watch?v=ZuVQds2hncs)
 
-- Get the [latest
-  release](https://github.com/LGUG2Z/nixos-wsl-starter/releases)
+- Get the [latest release](https://github.com/eevdev/nixos-wsl-starter/releases)
 - Install it (tweak the command to your desired paths):
 
 ```powershell
@@ -91,13 +49,11 @@ wsl -d NixOS
 - Get a copy of this repo (you'll probably want to fork it eventually):
 
 ```bash
-git clone https://github.com/LGUG2Z/nixos-wsl-starter.git /tmp/configuration
+git clone https://github.com/eevdev/nixos-wsl-starter.git /tmp/configuration
 cd /tmp/configuration
 ```
 
-- Change the username to your desired username in `flake.nix` with `nvim` (or
-  whichever editor you prefer)
-- Install `win32yank` with `scoop` and add it to your `$PATH` in NixOS
+- Change the username to your desired username in `flake.nix`
 - Apply the configuration and shutdown the WSL2 VM
 
 ```bash
@@ -117,16 +73,12 @@ wsl -d NixOS
 mv /tmp/configuration ~/configuration
 ```
 
-- Go through all the `FIXME:` notices in `~/configuration` and make changes
-  wherever you want
+- Go through all the `CONFIG:` notices in this repo to check what can be configured
 - Apply the configuration
 
 ```bash
 sudo nixos-rebuild switch --flake ~/configuration
 ```
-
-Note: If developing in Rust, you'll still be managing your toolchains and
-components like `rust-analyzer` with `rustup`!
 
 ## Project Layout
 

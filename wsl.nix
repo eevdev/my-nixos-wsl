@@ -1,5 +1,5 @@
 {
-  # FIXME: uncomment the next line if you want to reference your GitHub/GitLab access tokens and other secrets
+  # CONFIG: uncomment the next line if you want to reference your GitHub/GitLab access tokens and other secrets
   # secrets,
   username,
   hostname,
@@ -7,12 +7,12 @@
   inputs,
   ...
 }: {
-  # FIXME: change to your tz! look it up with "timedatectl list-timezones"
-  time.timeZone = "America/Los_Angeles";
+  # CONFIG: timezone (`timedatectl list-timezones`)
+  time.timeZone = "Europe/Oslo";
 
   networking.hostName = "${hostname}";
 
-  # FIXME: change your shell here if you don't want fish
+  # CONFIG: shell
   programs.fish.enable = true;
   environment.pathsToLink = ["/share/fish"];
   environment.shells = [pkgs.fish];
@@ -21,21 +21,21 @@
 
   security.sudo.wheelNeedsPassword = false;
 
-  # FIXME: uncomment the next line to enable SSH
+  # CONFIG: openssh
   # services.openssh.enable = true;
 
   users.users.${username} = {
     isNormalUser = true;
-    # FIXME: change your shell here if you don't want fish
+    # CONFIG: shell
     shell = pkgs.fish;
     extraGroups = [
       "wheel"
-      # FIXME: uncomment the next line if you want to run docker without sudo
+      # CONFIG: for using docker without sudo
       # "docker"
     ];
-    # FIXME: add your own hashed password
+    # CONFIG: hashed password
     # hashedPassword = "";
-    # FIXME: add your own ssh public key
+    # CONFIG: ssh public key
     # openssh.authorizedKeys.keys = [
     #   "ssh-rsa ..."
     # ];
@@ -57,7 +57,7 @@
     defaultUser = username;
     startMenuLaunchers = true;
 
-    # Enable integration with Docker Desktop (needs to be installed)
+    # CONFIG: Docker Desktop integration (must be installed on host machine)
     docker-desktop.enable = false;
   };
 
@@ -67,28 +67,20 @@
     autoPrune.enable = true;
   };
 
-  # FIXME: uncomment the next block to make vscode running in Windows "just work" with NixOS on WSL
-  # solution adapted from: https://github.com/K900/vscode-remote-workaround
-  # more information: https://github.com/nix-community/NixOS-WSL/issues/238 and https://github.com/nix-community/NixOS-WSL/issues/294
-  # systemd.user = {
-  #   paths.vscode-remote-workaround = {
-  #     wantedBy = ["default.target"];
-  #     pathConfig.PathChanged = "%h/.vscode-server/bin";
-  #   };
-  #   services.vscode-remote-workaround.script = ''
-  #     for i in ~/.vscode-server/bin/*; do
-  #       if [ -e $i/node ]; then
-  #         echo "Fixing vscode-server in $i..."
-  #         ln -sf ${pkgs.nodejs_18}/bin/node $i/node
-  #       fi
-  #     done
-  #   '';
-  # };
+  # nix-ld is needed for connecting VS Code on the Windows host machine to WSL NixOS
+  # See: https://nix-community.github.io/NixOS-WSL/how-to/vscode.html
+  # FIXME: it seems like nix-ld-rs has been merged into nix-ld as version 2.0.0, which is not yet released on stable channels.
+  #        Once that happens, the following small block should be replaced by this: `programs.nix-ld.enable = true;`
+  #        (ie. remove `package = pkgs.nix-ld-rs;`)
+  programs.nix-ld = {
+    enable = true;
+    package = pkgs.nix-ld-rs;
+  };
 
   nix = {
     settings = {
       trusted-users = [username];
-      # FIXME: use your access tokens from secrets.json here to be able to clone private repos on GitHub and GitLab
+      # CONFIG: access tokens for building your NixOS (or at least that's what I assume this is for)
       # access-tokens = [
       #   "github.com=${secrets.github_token}"
       #   "gitlab.com=OAuth2:${secrets.gitlab_token}"
